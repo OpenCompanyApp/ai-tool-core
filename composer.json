@@ -1,6 +1,6 @@
 {
-    "name": "opencompanyapp/ai-tool-core",
-    "description": "Core framework for OpenCompany AI tool packages — ToolProvider contract, credential abstraction, and auto-discovery for Laravel AI SDK tools.",
+    "name": "opencompanyapp/integration-core",
+    "description": "Core framework for OpenCompany integration packages — contracts, credential abstraction, and auto-discovery registry for Laravel.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,7 @@
             "homepage": "https://github.com/OpenCompanyApp"
         }
     ],
-    "keywords": ["laravel", "ai", "tools", "agents", "opencompany"],
+    "keywords": ["laravel", "integrations", "tools", "agents", "opencompany"],
     "require": {
         "php": "^8.2",
         "laravel/ai": "^0.1",
@@ -16,13 +16,13 @@
     },
     "autoload": {
         "psr-4": {
-            "OpenCompany\\AiToolCore\\": "src/"
+            "OpenCompany\\IntegrationCore\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "OpenCompany\\AiToolCore\\AiToolCoreServiceProvider"
+                "OpenCompany\\IntegrationCore\\IntegrationCoreServiceProvider"
             ]
         }
     },

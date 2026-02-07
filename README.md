@@ -1,21 +1,21 @@
-# AI Tool Core
+# Integration Core
 
-> Core framework for building AI tool packages for the [Laravel AI SDK](https://github.com/laravel/ai). Part of the [OpenCompany](https://github.com/OpenCompanyApp) AI tool ecosystem.
+> Core framework for building integration packages for the [Laravel AI SDK](https://github.com/laravel/ai). Part of the [OpenCompany](https://github.com/OpenCompanyApp) ecosystem.
 
-Provides the contracts, credential abstraction, and auto-discovery registry that all OpenCompany AI tool packages build on. Think of it as the shared foundation — like n8n's node SDK, but for Laravel AI agents.
+Provides the contracts, credential abstraction, and auto-discovery registry that all OpenCompany integration packages build on. Think of it as the shared foundation — like n8n's node SDK, but for Laravel AI agents.
 
 ## About OpenCompany
 
 [OpenCompany](https://github.com/OpenCompanyApp) is an AI-powered workplace platform where teams deploy and coordinate multiple AI agents alongside human collaborators. It combines team messaging, document collaboration, task management, and intelligent automation in a single workspace — with built-in approval workflows and granular permission controls so organizations can adopt AI agents safely and transparently.
 
-This core package enables OpenCompany's plugin architecture for AI tools — each external integration (astronomy, analytics, messaging, etc.) is a separate Composer package that any Laravel app can install independently.
+This core package enables OpenCompany's plugin architecture for integrations — each external integration (astronomy, analytics, messaging, etc.) is a separate Composer package that any Laravel app can install independently.
 
 OpenCompany is built with Laravel, Vue 3, and Inertia.js. Learn more at [github.com/OpenCompanyApp](https://github.com/OpenCompanyApp).
 
 ## Installation
 
 ```console
-composer require opencompanyapp/ai-tool-core
+composer require opencompanyapp/integration-core
 ```
 
 Laravel auto-discovers the service provider. No manual registration needed.
@@ -24,19 +24,19 @@ Laravel auto-discovers the service provider. No manual registration needed.
 
 | Component | Purpose |
 |-----------|---------|
-| `ToolProvider` interface | Contract every tool package implements — declares tools, metadata, and factory method |
+| `ToolProvider` interface | Contract every integration package implements — declares tools, metadata, and factory method |
 | `CredentialResolver` interface | Abstraction for API keys/config — swap between config files, databases, or vaults |
 | `ConfigCredentialResolver` | Default resolver that reads from `config/ai-tools.php` |
 | `ToolProviderRegistry` | Singleton registry that collects all tool providers for discovery |
-| `AiToolCoreServiceProvider` | Binds everything with sensible defaults (all overridable) |
+| `IntegrationCoreServiceProvider` | Binds everything with sensible defaults (all overridable) |
 
-## Quick Start: Building a Tool Package
+## Quick Start: Building an Integration Package
 
 ### 1. Implement `ToolProvider`
 
 ```php
 use Laravel\Ai\Contracts\Tool;
-use OpenCompany\AiToolCore\Contracts\ToolProvider;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 class WeatherToolProvider implements ToolProvider
 {
@@ -75,7 +75,7 @@ class WeatherToolProvider implements ToolProvider
 
     public function createTool(string $class, array $context = []): Tool
     {
-        $credentials = app(\OpenCompany\AiToolCore\Contracts\CredentialResolver::class);
+        $credentials = app(\OpenCompany\IntegrationCore\Contracts\CredentialResolver::class);
 
         return new GetWeather(
             apiKey: $credentials->get('weather', 'api_key'),
@@ -88,7 +88,7 @@ class WeatherToolProvider implements ToolProvider
 ### 2. Register in Your Service Provider
 
 ```php
-use OpenCompany\AiToolCore\Support\ToolProviderRegistry;
+use OpenCompany\IntegrationCore\Support\ToolProviderRegistry;
 
 class WeatherServiceProvider extends ServiceProvider
 {
@@ -137,7 +137,7 @@ class GetWeather implements Tool
 
 ## Credential Management
 
-The `CredentialResolver` interface abstracts where API keys come from. Tool packages call `CredentialResolver` to get credentials without knowing or caring about the storage backend.
+The `CredentialResolver` interface abstracts where API keys come from. Integration packages call `CredentialResolver` to get credentials without knowing or caring about the storage backend.
 
 **In OpenCompany**, credentials are managed through the Integrations UI and stored encrypted in the database. Users never need to touch config files — everything is configured through the admin interface.
 
@@ -157,14 +157,14 @@ You can swap the resolver to use any storage backend (database, vault, secrets m
 
 ```php
 $this->app->singleton(
-    \OpenCompany\AiToolCore\Contracts\CredentialResolver::class,
+    \OpenCompany\IntegrationCore\Contracts\CredentialResolver::class,
     YourCustomResolver::class
 );
 ```
 
-## Tool Packages
+## Integration Packages
 
-All installed tool packages auto-register via Laravel service provider discovery. The `ToolProviderRegistry` collects them:
+All installed integration packages auto-register via Laravel service provider discovery. The `ToolProviderRegistry` collects them:
 
 ```php
 $registry = app(ToolProviderRegistry::class);

@@ -1,6 +1,6 @@
 <?php
 
-namespace OpenCompany\AiToolCore\Contracts;
+namespace OpenCompany\IntegrationCore\Contracts;
 
 use Laravel\Ai\Contracts\Tool;
 

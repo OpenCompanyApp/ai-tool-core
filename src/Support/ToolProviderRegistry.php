@@ -1,8 +1,8 @@
 <?php
 
-namespace OpenCompany\AiToolCore\Support;
+namespace OpenCompany\IntegrationCore\Support;
 
-use OpenCompany\AiToolCore\Contracts\ToolProvider;
+use OpenCompany\IntegrationCore\Contracts\ToolProvider;
 
 class ToolProviderRegistry
 {

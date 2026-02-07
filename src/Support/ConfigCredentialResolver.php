@@ -1,8 +1,8 @@
 <?php
 
-namespace OpenCompany\AiToolCore\Support;
+namespace OpenCompany\IntegrationCore\Support;
 
-use OpenCompany\AiToolCore\Contracts\CredentialResolver;
+use OpenCompany\IntegrationCore\Contracts\CredentialResolver;
 
 /**
  * Default credential resolver that reads from Laravel config.
