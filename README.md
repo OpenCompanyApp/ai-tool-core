@@ -137,9 +137,11 @@ class GetWeather implements Tool
 
 ## Credential Management
 
-The `CredentialResolver` interface abstracts where API keys come from.
+The `CredentialResolver` interface abstracts where API keys come from. Tool packages call `CredentialResolver` to get credentials without knowing or caring about the storage backend.
 
-**Default: Config-based** (reads from `config/ai-tools.php`)
+**In OpenCompany**, credentials are managed through the Integrations UI and stored encrypted in the database. Users never need to touch config files — everything is configured through the admin interface.
+
+**For standalone usage** in other Laravel apps, the default `ConfigCredentialResolver` reads from a config file:
 
 ```php
 // config/ai-tools.php
@@ -148,25 +150,21 @@ return [
         'api_key' => env('PLAUSIBLE_API_KEY'),
         'url'     => env('PLAUSIBLE_URL', 'https://plausible.io'),
     ],
-    'weather' => [
-        'api_key' => env('WEATHER_API_KEY'),
-    ],
 ];
 ```
 
-**Override for DB-backed credentials:**
+You can swap the resolver to use any storage backend (database, vault, secrets manager) by binding your own implementation:
 
 ```php
-// In your AppServiceProvider::register()
 $this->app->singleton(
     \OpenCompany\AiToolCore\Contracts\CredentialResolver::class,
-    \App\Services\MyDatabaseCredentialResolver::class
+    YourCustomResolver::class
 );
 ```
 
-## Discovery
+## Tool Packages
 
-All tool providers registered with `ToolProviderRegistry` are automatically discoverable by the host application. The registry provides:
+All installed tool packages auto-register via Laravel service provider discovery. The `ToolProviderRegistry` collects them:
 
 ```php
 $registry = app(ToolProviderRegistry::class);
@@ -175,8 +173,6 @@ $registry->all();              // All registered providers
 $registry->has('celestial');   // Check if a provider exists
 $registry->get('celestial');   // Get a specific provider
 ```
-
-## Available Tool Packages
 
 | Package | Description |
 |---------|-------------|
