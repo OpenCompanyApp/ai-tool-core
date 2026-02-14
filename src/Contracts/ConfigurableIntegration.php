@@ -28,7 +28,7 @@ interface ConfigurableIntegration
      * Returns an ordered array of field definitions. Each field:
      *
      *   'key'              => string   Config storage key (e.g., 'api_key')
-     *   'type'             => string   'secret' | 'url' | 'text' | 'select' | 'string_list'
+     *   'type'             => string   'secret' | 'url' | 'text' | 'select' | 'string_list' | 'oauth_connect'
      *   'label'            => string   Display label
      *   'placeholder'      => string   Input placeholder (optional)
      *   'hint'             => string   Help text below the field, supports inline HTML (optional)
@@ -37,6 +37,10 @@ interface ConfigurableIntegration
      *   'options'          => array    For 'select' type: ['value' => 'Label', ...] (optional)
      *   'item_icon'        => string   For 'string_list': icon for each list item (optional)
      *   'item_placeholder' => string   For 'string_list': placeholder for the add input (optional)
+     *   'authorize_url'    => string   For 'oauth_connect': path to OAuth authorize endpoint (optional)
+     *   'redirect_uri'     => string   For 'oauth_connect': callback path shown as hint to user (optional)
+     *   'visible_when'     => array    Conditionally show field: ['field' => 'other_key', 'value' => 'match'] (optional)
+     *                                  Value can be a string or array of strings for multi-match.
      *
      * @return array<int, array{key: string, type: string, label: string}>
      */
